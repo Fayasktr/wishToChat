@@ -31,7 +31,7 @@ module.exports = (io) => {
         io.to('couple_room').emit('statusUpdate', { receiverId: socket.userId, status: 'delivered' });
 
         socket.on('sendMessage', async (data) => {
-            const { receiverId, content, type, mediaUrl } = data;
+            const { receiverId, content, type, mediaUrl, replyTo } = data;
 
             const message = new Message({
                 senderId: socket.userId,
@@ -39,6 +39,7 @@ module.exports = (io) => {
                 content,
                 type,
                 mediaUrl,
+                replyTo,
                 status: 'sent'
             });
 
@@ -49,6 +50,7 @@ module.exports = (io) => {
             }
 
             await message.save();
+            await message.populate('replyTo');
 
             // Broadcast to the room
             io.to('couple_room').emit('message', message);

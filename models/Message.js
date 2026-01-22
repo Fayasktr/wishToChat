@@ -9,6 +9,7 @@ const MessageSchema = new mongoose.Schema({
     status: { type: String, enum: ['sent', 'delivered', 'seen'], default: 'sent' },
     deletedFor: [{ type: mongoose.Schema.Types.ObjectId, ref: 'ChatUser' }],
     deletedGlobally: { type: Boolean, default: false },
+    replyTo: { type: mongoose.Schema.Types.ObjectId, ref: 'Message' },
     timestamp: { type: Date, default: Date.now }
 });
 

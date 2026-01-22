@@ -37,9 +37,13 @@
 
     <div class="chat-wrapper" style="display: none;" id="chat-app">
         <div class="chat-header">
-            <div>
-                <h2 id="partner-name">...</h2>
-                <span id="typing-indicator" style="font-size: 0.8rem; color: #0cc7be; display: none;">typing...</span>
+            <div class="partner-info">
+                <img src="/images/pen.png" class="avatar" id="partner-avatar">
+                <div>
+                    <h2 id="partner-name">...</h2>
+                    <span id="typing-indicator"
+                        style="font-size: 0.8rem; color: #fff; opacity: 0.8; display: none;">typing...</span>
+                </div>
             </div>
             <div class="menu-container">
                 <button class="menu-trigger" id="menu-trigger">⋮</button>
@@ -59,9 +63,22 @@
         </div>
 
         <div class="chat-input-area" id="chat-input-area">
-            <button id="record-btn" class="audio-btn">🎤</button>
-            <input type="text" id="chat-input" placeholder="Type a message...">
-            <button id="send-btn" class="send-btn">🚀</button>
+            <div id="reply-box" class="reply-preview">
+                <div id="reply-text" style="font-size: 0.8rem; opacity: 0.7;">Replying to...</div>
+                <div id="reply-content" style="font-size: 0.9rem; margin-top: 4px;">Message content</div>
+                <span class="close-reply" onclick="cancelReply()">×</span>
+            </div>
+            <div class="input-row">
+                <button id="record-btn" class="audio-btn">🎤</button>
+                <textarea id="chat-input" placeholder="Type a message..." rows="1"></textarea>
+                <button id="send-btn" class="send-btn">
+                    <svg viewBox="0 0 24 24">
+                        <path
+                            d="M1.101,21.757L23.8,12.028L1.101,2.3l0.011,7.912l13.623,1.816L1.112,13.845L1.101,21.757z">
+                        </path>
+                    </svg>
+                </button>
+            </div>
         </div>
     </div>
 

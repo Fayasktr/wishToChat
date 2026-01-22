@@ -5,6 +5,8 @@ let mediaRecorder;
 let audioChunks = [];
 let selectionMode = false;
 let selectedMessages = new Set();
+let replyingToId = null;
+let lastAppendedDate = null;
 
 const API_BASE = '/chat-api';
 
@@ -70,8 +72,14 @@ async function initChat() {
     const partner = await pRes.json();
     localStorage.setItem('partnerId', partner._id);
 
-    // Objective 1: Personalize Name Display (Fayas sees Safeena, Safeena sees Fayas)
+    // Set Partner Info
     document.getElementById('partner-name').innerText = partner.name;
+    const avatarEl = document.getElementById('partner-avatar');
+    if (partner.name.toLowerCase() === 'safeena') {
+        avatarEl.src = 'https://api.dicebear.com/7.x/avataaars/svg?seed=Safeena&backgroundColor=FF69B4&mood[]=happy';
+    } else {
+        avatarEl.src = 'https://api.dicebear.com/7.x/avataaars/svg?seed=Fayas&backgroundColor=4A90E2&mood[]=happy';
+    }
 
     socket = io({ auth: { token } });
 
@@ -99,12 +107,19 @@ async function initChat() {
     });
 
     const input = document.getElementById('chat-input');
-    input.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') sendMessage();
+    input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage();
+        }
     });
 
     let typingTimeout;
-    input.addEventListener('input', () => {
+    input.addEventListener('input', function () {
+        // Auto-resize
+        this.style.height = 'auto';
+        this.style.height = (this.scrollHeight) + 'px';
+
         socket.emit('typing', { isTyping: true });
         clearTimeout(typingTimeout);
         typingTimeout = setTimeout(() => {
@@ -121,6 +136,7 @@ async function fetchHistory() {
     });
     const messages = await res.json();
     document.getElementById('message-container').innerHTML = '';
+    lastAppendedDate = null; // Reset
     messages.forEach(appendMessage);
     scrollToBottom();
 
@@ -138,15 +154,48 @@ function sendMessage() {
     socket.emit('sendMessage', {
         receiverId: localStorage.getItem('partnerId'),
         content,
-        type: 'text'
+        type: 'text',
+        replyTo: replyingToId
     });
 
     input.value = '';
+    input.style.height = 'auto'; // Reset height
+    cancelReply();
+}
+
+function setReply(messageId, content, senderName) {
+    replyingToId = messageId;
+    const replyBox = document.getElementById('reply-box');
+    const replyText = document.getElementById('reply-text');
+    const replyContent = document.getElementById('reply-content');
+
+    replyText.innerText = `Replying to ${senderName}`;
+    replyContent.innerText = content.length > 50 ? content.substring(0, 50) + '...' : content;
+    replyBox.style.display = 'block';
+    document.getElementById('chat-input').focus();
+}
+
+function cancelReply() {
+    replyingToId = null;
+    document.getElementById('reply-box').style.display = 'none';
 }
 
 function appendMessage(msg) {
     const container = document.getElementById('message-container');
-    const side = (msg.senderId._id || msg.senderId) === currentUser._id ? 'sent' : 'received';
+    const msgDate = new Date(msg.timestamp).toDateString();
+
+    // Insert date separator if day changed
+    if (msgDate !== lastAppendedDate) {
+        const separator = document.createElement('div');
+        separator.className = 'date-separator';
+        separator.innerHTML = `<span>${getDisplayDate(msg.timestamp)}</span>`;
+        container.appendChild(separator);
+        lastAppendedDate = msgDate;
+    }
+
+    const senderId = msg.senderId._id || msg.senderId;
+    const side = senderId === currentUser._id ? 'sent' : 'received';
+    const senderName = msg.senderId.name || (side === 'sent' ? currentUser.name : document.getElementById('partner-name').innerText);
 
     const div = document.createElement('div');
     div.className = `message ${side}`;
@@ -155,11 +204,38 @@ function appendMessage(msg) {
     if (msg.deletedGlobally) {
         div.innerHTML = '<span class="deleted-msg">This message was deleted</span>';
     } else {
-        if (msg.type === 'text') {
-            div.innerText = msg.content;
-        } else if (msg.type === 'audio') {
-            div.innerHTML = `<audio controls src="${msg.mediaUrl}"></audio>`;
+        // Render Reply UI if exists
+        if (msg.replyTo) {
+            const replyDiv = document.createElement('div');
+            replyDiv.className = 'quoted-message';
+            const replyContent = msg.replyTo.type === 'audio' ? '🎤 Audio Message' : msg.replyTo.content;
+            replyDiv.innerText = replyContent.length > 40 ? replyContent.substring(0, 40) + '...' : replyContent;
+            replyDiv.onclick = (e) => {
+                e.stopPropagation();
+                const target = document.querySelector(`.message[data-id="${msg.replyTo._id}"]`);
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            };
+            div.appendChild(replyDiv);
         }
+
+        const messageText = document.createElement('div');
+        messageText.className = 'message-text';
+        if (msg.type === 'text') {
+            messageText.innerText = msg.content;
+        } else if (msg.type === 'audio') {
+            messageText.innerHTML = `<audio controls src="${msg.mediaUrl}"></audio>`;
+        }
+        div.appendChild(messageText);
+
+        // Reply Action Button
+        const replyBtn = document.createElement('div');
+        replyBtn.className = 'reply-action';
+        replyBtn.innerHTML = '↩️';
+        replyBtn.onclick = (e) => {
+            e.stopPropagation();
+            setReply(msg._id, msg.type === 'audio' ? 'Audio Message' : msg.content, senderName);
+        };
+        div.appendChild(replyBtn);
 
         const info = document.createElement('div');
         info.className = 'message-info';
@@ -362,6 +438,25 @@ function showNotification(msg) {
 function logout() {
     localStorage.clear();
     location.reload();
+}
+
+function getDisplayDate(timestamp) {
+    const date = new Date(timestamp);
+    const today = new Date();
+    const yesterday = new Date();
+    yesterday.setDate(today.getDate() - 1);
+
+    if (date.toDateString() === today.toDateString()) {
+        return "Today";
+    } else if (date.toDateString() === yesterday.toDateString()) {
+        return "Yesterday";
+    } else {
+        return date.toLocaleDateString(undefined, {
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric'
+        });
+    }
 }
 
 window.addEventListener('focus', () => {

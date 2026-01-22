@@ -24,7 +24,9 @@ exports.getHistory = async (req, res) => {
         const messages = await Message.find({
             deletedGlobally: false,
             deletedFor: { $ne: req.user.userId }
-        }).sort({ timestamp: 1 }).populate('senderId', 'name');
+        }).sort({ timestamp: 1 })
+            .populate('senderId', 'name')
+            .populate('replyTo');
         res.json(messages);
     } catch (err) {
         res.status(500).json({ error: 'Server error' });
