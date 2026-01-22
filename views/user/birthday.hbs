@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}}</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Inter:wght@400;600&display=swap"
+        rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        body.birthday-theme {
+            background: #000000;
+            color: #ffffff;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            margin: 0;
+        }
+
+        .pov-text {
+            font-family: 'Inter', sans-serif;
+            color: #FFA500;
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0;
+        }
+
+        .interactive-heart {
+            font-size: 5rem;
+            cursor: pointer;
+            transition: transform 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            opacity: 0;
+            z-index: 10;
+        }
+
+        .interactive-heart:hover {
+            transform: scale(1.1);
+        }
+
+        .heart-glow {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, rgba(255, 105, 180, 0.4) 0%, transparent 70%);
+            border-radius: 50%;
+            z-index: -1;
+            animation: heart-shimmer 2s infinite;
+        }
+
+        @keyframes heart-shimmer {
+            0% {
+                transform: scale(0.8);
+                opacity: 0.5;
+            }
+
+            50% {
+                transform: scale(1.3);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(0.8);
+                opacity: 0.5;
+            }
+        }
+
+        .click-text {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.6rem;
+            color: #0cc7be;
+            text-decoration: none;
+            text-shadow: 0 0 15px rgba(12, 199, 190, 0.5);
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-top: 10px;
+            animation: text-glow 1.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes text-glow {
+            from {
+                text-shadow: 0 0 10px #0cc7be, 0 0 20px #0cc7be;
+            }
+
+            to {
+                text-shadow: 0 0 20px #0cc7be, 0 0 30px #0cc7be, 0 0 40px #0cc7be;
+            }
+        }
+
+        .crown-icon {
+            font-size: 2.5rem;
+            position: absolute;
+            top: -45px;
+            filter: drop-shadow(0 0 10px gold);
+            animation: crown-float 2s ease-in-out infinite;
+        }
+
+        @keyframes crown-float {
+            0% {
+                transform: translateY(0) rotate(-10deg);
+            }
+
+            50% {
+                transform: translateY(-10px) rotate(10deg);
+            }
+
+            100% {
+                transform: translateY(0) rotate(-10deg);
+            }
+        }
+
+        .message-container {
+            position: absolute;
+            width: 85%;
+            max-width: 650px;
+            text-align: center;
+            display: none;
+            z-index: 10;
+        }
+
+        .typing-text {
+            font-family: 'Great Vibes', cursive;
+            font-size: clamp(1.8rem, 5vw, 2.8rem);
+            line-height: 1.5;
+            color: var(--primary);
+            margin-bottom: 2.5rem;
+        }
+
+        /* Using the global btn-primary style but with a slight tweak for dark theme */
+        .reveal-btn {
+            opacity: 0;
+            text-decoration: none;
+        }
+
+        /* Floating Hearts Layer */
+        /* Floating Mini Chat */
+        .btn-mini-chat {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            z-index: 1000;
+            opacity: 0;
+            transform: scale(0.5);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            pointer-events: none;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-mini-chat.show {
+            opacity: 1;
+            transform: scale(1);
+            pointer-events: auto;
+        }
+
+        .btn-mini-chat:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1) rotate(5deg);
+            border-color: #FF69B4;
+        }
+
+        .whisper-tooltip {
+            position: absolute;
+            right: 65px;
+            background: white;
+            color: #333;
+            padding: 5px 12px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            white-space: nowrap;
+            opacity: 0;
+            transform: translateX(10px);
+            transition: all 0.3s ease;
+            pointer-events: none;
+            font-weight: 600;
+        }
+
+        .btn-mini-chat:hover .whisper-tooltip {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    </style>
+</head>
+
+<body class="birthday-theme">
+    <div id="birthday-hearts"></div>
+
+    <!-- Floating Cake Icon -->
+    <div
+        style="position: fixed; top: 30px; left: 50%; transform: translateX(-50%); width: 120px; animation: float 4s ease-in-out infinite; z-index: 100;">
+        <img src="/images/birthday_cake.png" alt="Birthday Cake"
+            style="width: 100%; filter: drop-shadow(0 15px 30px rgba(255,105,180,0.5));">
+    </div>
+
+    <div class="pov-text" id="povText"
+        style="opacity: 1; text-align: center; font-weight: 700; background: #be062e; padding: 0.5rem 1.5rem; border-radius: 50px; border: 1px dashed #FFA500; border-color: #FFA500; margin-top: 5rem;">
+        Pov: it's her birthday 🎂✨
+    </div>
+
+    {{!-- chat with me --}}
+
+    <a href="/chat" class="btn-mini-chat" id="miniChat">
+        <span style="font-size: 1.5rem;">🤫</span>
+        <span class="whisper-tooltip">whisper?</span>
+    </a>
+    <div class="interactive-heart" id="heartPrompt" style="position: relative;">
+        <div class="crown-icon">👑</div>
+        <div class="heart-glow"></div>
+        <span id="mainHeart" style="font-size: 7rem; filter: drop-shadow(0 0 20px #ff69b4);">❤️</span>
+        <span class="click-text">Click Me Birthday Queen! :)</span>
+    </div>
+
+    <div class="message-container" id="messageContainer">
+        <h1 class="typing-text" id="typingMessage"></h1>
+        <div class="flex-center">
+            <a href="/landing" class="btn-primary reveal-btn" id="revealBtn">See My Surprises ✨</a>
+        </div>
+    </div>
+
+
+
+
+    <script>
+        const message = "To the girl who makes my world brighter... Happy Birthday Safeena! ❤️. Before this you make my days better, So Today is i am making your day better.";
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initial sequence
+            const tl = gsap.timeline();
+
+            tl.to("#povText", { opacity: 1, duration: 1, delay: 0.5 })
+                .to("#heartPrompt", { opacity: 1, scale: 1, duration: 1, ease: "back.out(1.7)" }, "-=0.2")
+                .to("#miniChat", { opacity: 1, scale: 1, duration: 0.8, ease: "back.out(1.7)", pointerEvents: "auto" }, "-=0.5");
+
+            // Heart pulse
+            gsap.to("#mainHeart", {
+                scale: 1.2,
+                duration: 0.8,
+                repeat: -1,
+                yoyo: true,
+                ease: "power1.inOut"
+            });
+        });
+
+        document.getElementById('heartPrompt').addEventListener('click', () => {
+            gsap.to("#heartPrompt", {
+                opacity: 0,
+                scale: 0,
+                duration: 0.5,
+                onComplete: () => {
+                    document.getElementById('heartPrompt').style.display = 'none';
+                    document.getElementById('povText').style.display = 'none';
+                    document.getElementById('messageContainer').style.display = 'block';
+                    startTyping();
+                }
+            });
+        });
+
+        function startTyping() {
+            const typingEl = document.getElementById('typingMessage');
+            let i = 0;
+            typingEl.innerHTML = '';
+
+            function type() {
+                if (i < message.length) {
+                    typingEl.innerHTML += message.charAt(i);
+                    i++;
+                    setTimeout(type, 50);
+                } else {
+                    // Show reveal button after typing finishes
+                    gsap.to("#revealBtn", { opacity: 1, y: -10, duration: 1, ease: "power3.out" });
+
+                    // Burst of hearts
+                    for (let j = 0; j < 20; j++) {
+                        setTimeout(createPetal, j * 100);
+                    }
+                }
+            }
+
+            type();
+        }
+
+        function createPetal() {
+            const container = document.getElementById('birthday-hearts');
+            if (!container) return;
+
+            const heart = document.createElement('div');
+            heart.innerHTML = '❤️';
+            heart.style.position = 'absolute';
+            heart.style.color = '#FFB6C1';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.top = '110vh';
+            heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
+            heart.style.zIndex = '5';
+            container.appendChild(heart);
+
+            gsap.to(heart, {
+                y: '-120vh',
+                x: (Math.random() - 0.5) * 200,
+                rotation: Math.random() * 360,
+                duration: Math.random() * 5 + 5,
+                ease: "none",
+                onComplete: () => heart.remove()
+            });
+        }
+    </script>
+</body>
+
+</html>

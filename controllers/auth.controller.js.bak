@@ -1,0 +1,7 @@
+exports.getLogin = (req, res) => {
+    res.render('login', { title: 'Login' });
+};
+
+exports.getHome = (req, res) => {
+    res.render('home', { title: 'Home' });
+};

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}}</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    <div
+        style="padding: 2rem; display: flex; justify-content: center; flex-direction: column; align-items: center; gap: 2rem;">
+
+        <!-- Main Settings -->
+        <div class="glass-card" style="max-width: 600px; width: 100%;">
+            <h1 style="margin-bottom: 2rem; text-align: center;">General Settings</h1>
+            <form action="/admin/update" method="POST">
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; margin-bottom: 0.5rem;">Secret Code</label>
+                    <input type="text" name="secretCode" value="{{appSettings.secretCode}}" class="secret-input"
+                        style="text-align: left; letter-spacing: normal;">
+                </div>
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; margin-bottom: 0.5rem;">Music URL (MP3)</label>
+                    <input type="text" name="musicUrl" value="{{appSettings.musicUrl}}" class="secret-input"
+                        style="text-align: left; letter-spacing: normal;">
+                </div>
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; margin-bottom: 0.5rem;">Theme Color</label>
+                    <input type="color" name="themeColor" value="{{appSettings.themeColor}}"
+                        style="width: 100%; height: 50px; border-radius: 12px; border: 2px solid #FFB6C1;">
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%;">Save Changes</button>
+            </form>
+        </div>
+
+        <!-- Fayas Admin Panel -->
+        <div class="glass-card" style="max-width: 600px; width: 100%;">
+            <h1 style="margin-bottom: 2rem; text-align: center; color: var(--primary);">Fayas Admin Panel</h1>
+
+            <div style="margin-bottom: 2rem; text-align: center;">
+                <a href="/chat" class="btn-primary"
+                    style="display: inline-flex; align-items: center; justify-content: center; gap: 10px; width: 100%; background: #000; color: #fff; text-decoration: none; padding: 15px; border-radius: 12px; font-weight: 600;">
+                    <span>🤫</span> Open Private Whisper
+                </a>
+                <p style="font-size: 0.8rem; color: #666; margin-top: 5px;">Chat privately with your Safeena ❤️</p>
+                <div
+                    style="background: rgba(0,0,0,0.05); padding: 10px; border-radius: 8px; margin-top: 10px; font-size: 0.85rem;">
+                    <p style="margin-bottom: 5px;"><strong>Your Chat Login:</strong></p>
+                    <p style="color: #666;">Email: <code>fayaskpktr@gmail.com</code></p>
+                    <p style="color: #666;">Password: <code>2002</code></p>
+                </div>
+            </div>
+
+            <!-- App Gallery Upload -->
+            <div style="margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 1px solid rgba(0,0,0,0.1);">
+                <h3 style="margin-bottom: 1rem;">Main App Gallery</h3>
+                <form action="/admin/upload/app-gallery" method="POST" enctype="multipart/form-data">
+                    <div style="margin-bottom: 1rem;">
+                        <input type="file" name="galleryImages" multiple accept="image/*" class="secret-input"
+                            style="padding: 10px;">
+                    </div>
+                    <button type="submit" class="btn-primary" style="width: 100%;">Upload to Gallery</button>
+                </form>
+            </div>
+
+            <!-- Birthday Wish Media -->
+            <div>
+                <h3 style="margin-bottom: 1rem;">Birthday Wish Page (newWork)</h3>
+                <form action="/admin/upload/wish-media" method="POST" enctype="multipart/form-data">
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-size: 0.9rem;">Wish Background
+                            Music</label>
+                        <input type="file" name="wishAudio" accept="audio/*" class="secret-input"
+                            style="padding: 10px;">
+                    </div>
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-size: 0.9rem;">Wish Memories (Grid
+                            Images)</label>
+                        <input type="file" name="wishImages" multiple accept="image/*" class="secret-input"
+                            style="padding: 10px;">
+                    </div>
+                    <button type="submit" class="btn-primary" style="width: 100%;">Update Wish Media</button>
+                </form>
+            </div>
+        </div>
+
+        <div style="text-align: center;">
+            <a href="/login" style="color: var(--primary-dark);">Go to App</a>
+        </div>
+    </div>
+</body>
+
+</html>

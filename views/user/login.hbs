@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}}</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Inter:wght@400;600&display=swap"
+        rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+</head>
+
+<body>
+    <div id="heart-container"></div>
+    <div class="container container-center">
+        <div class="glass-card" id="loginCard">
+            <h1 class="cursive">Hello Safeena,</h1>
+
+            <p class="instruction-text"
+                style="font-size: 1.1rem; color: #666; font-weight: 500; margin-bottom: 2rem; line-height: 1.6;">
+                Tap the numbers to enter our <span style="color: var(--primary-dark); font-weight: 700;">secret
+                    code</span> ❤️
+            </p>
+
+            {{#if error}}
+            <p id="errorMessage"
+                style="background: rgba(255, 77, 77, 0.1); color: #ff4d4d; padding: 10px; border-radius: 12px; margin-bottom: 1.5rem; font-size: 0.95rem; font-weight: 600; border: 1px solid rgba(255, 77, 77, 0.2);">
+                {{error}}</p>
+            {{/if}}
+
+            <div class="pin-display" id="pinDisplay">
+                <div class="pin-dot"></div>
+                <div class="pin-dot"></div>
+                <div class="pin-dot"></div>
+                <div class="pin-dot"></div>
+            </div>
+
+            <div class="keypad">
+                <div class="key" onclick="appendNumber(1, event)">1</div>
+                <div class="key" onclick="appendNumber(2, event)">2</div>
+                <div class="key" onclick="appendNumber(3, event)">3</div>
+                <div class="key" onclick="appendNumber(4, event)">4</div>
+                <div class="key" onclick="appendNumber(5, event)">5</div>
+                <div class="key" onclick="appendNumber(6, event)">6</div>
+                <div class="key" onclick="appendNumber(7, event)">7</div>
+                <div class="key" onclick="appendNumber(8, event)">8</div>
+                <div class="key" onclick="appendNumber(9, event)">9</div>
+                <div class="key" ></div>
+                
+                <div class="key" onclick="appendNumber(0, event)">0</div>
+                <div class="key backspace" onclick="deleteNumber()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"></path>
+                        <line x1="18" y1="9" x2="12" y2="15"></line>
+                        <line x1="12" y1="9" x2="18" y2="15"></line>
+                    </svg>
+                </div>
+            </div>
+
+            <form id="loginForm" action="/login" method="POST" style="display: none;">
+                <input type="password" name="code" id="secretCodeInput">
+            </form>
+        </div>
+    </div>
+
+    <script src="/js/app.js"></script>
+</body>
+
+</html>

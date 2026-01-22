@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}}</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Inter:wght@400;600&display=swap"
+        rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+</head>
+
+<body>
+    <div class="container flex-center" style="min-height: 100vh;">
+        <div class="glass-card fade-in" id="gift-box" style="cursor: pointer; padding: 4rem 2rem;">
+            <div id="gift-icon"
+                style="font-size: 6rem; margin-bottom: 1.5rem; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1));">🎁
+            </div>
+            <h2 style="color: var(--primary-dark); margin-bottom: 1rem;">A Surprise for You!</h2>
+            <p style="opacity: 0.8;">Tap the gift box to open it ❤️</p>
+        </div>
+
+        <div id="surprise-content" style="display: none; width: 100%;">
+            <div class="glass-card" style="padding: 4rem 2rem;">
+                <h1 class="cursive">SURPRISE!</h1>
+                <p style="font-size: 1.4rem; margin: 1.5rem 0; color: var(--primary-dark); font-weight: 600;">You've won
+                    my heart forever ❤️</p>
+                <div style="margin-top: 3rem;">
+                    <a href="/wish" class="btn-primary">Go to The Big Wish 🎂</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/js/app.js"></script>
+    <script>
+        document.getElementById('gift-box').onclick = function () {
+            gsap.to('#gift-box', {
+                scale: 0,
+                opacity: 0,
+                rotate: 15,
+                duration: 0.6,
+                ease: "back.in(1.7)",
+                onComplete: () => {
+                    document.getElementById('gift-box').style.display = 'none';
+                    document.getElementById('surprise-content').style.display = 'block';
+                    gsap.from('#surprise-content', {
+                        scale: 0.5,
+                        opacity: 0,
+                        duration: 0.8,
+                        ease: "elastic.out(1, 0.75)"
+                    });
+                }
+            });
+        };
+    </script>
+</body>
+
+</html>

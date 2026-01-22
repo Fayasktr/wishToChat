@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whisper | Private Chat</title>
+    <link rel="stylesheet" href="/css/chat.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600\u0026family=Great+Vibes\u0026display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <!-- Auth Modal -->
+    <div id="auth-modal">
+        <div class="auth-card">
+            <h1 style="font-family: 'Great Vibes', cursive; color: #FF69B4; font-size: 3rem; margin-bottom: 2rem;">
+                Whisper</h1>
+            <p style="color: rgba(255,255,255,0.8); margin-bottom: 2rem; font-family: 'Inter', sans-serif;">
+                {{#if (eq currentUser 'safeena')}}
+                Hey Safeena ❤️<br><span style="font-size: 0.9rem; opacity: 0.6;">Give your secret pass to enter</span>
+                {{else}}
+                Hey Fayas ❤️<br><span style="font-size: 0.9rem; opacity: 0.6;">Enter our private safe space</span>
+                {{/if}}
+            </p>
+
+            {{!-- Pre-identify the user email based on session --}}
+            <input type="hidden" id="login-email"
+                value="{{#if (eq currentUser 'safeena')}}safeena@gmail.com{{else}}fayaskpktr@gmail.com{{/if}}">
+
+            <input type="password" id="login-pass" class="auth-input" placeholder="Secret Pass.." autofocus>
+            <button id="login-btn" class="btn-primary" style="width: 100%; border-radius: 10px;">Enter Space ✨</button>
+            <p id="auth-error" style="color: #ff4d4d; margin-top: 1rem; font-size: 0.9rem;"></p>
+        </div>
+    </div>
+
+    <div class="chat-wrapper" style="display: none;" id="chat-app">
+        <div class="chat-header">
+            <div>
+                <h2 id="partner-name">...</h2>
+                <span id="typing-indicator" style="font-size: 0.8rem; color: #0cc7be; display: none;">typing...</span>
+            </div>
+            <div class="menu-container">
+                <button class="menu-trigger" id="menu-trigger">⋮</button>
+                <div class="dropdown-menu" id="dropdown-menu">
+                    <div class="dropdown-item" onclick="toggleSelectionMode()">Select Messages</div>
+                    <div class="dropdown-item danger" onclick="confirmClearChat('self')">Clear for Me</div>
+                    {{#if (eq currentUser 'fayas')}}
+                    <div class="dropdown-item danger" onclick="confirmClearChat('both')">Clear for Both</div>
+                    {{/if}}
+                    <div class="dropdown-item" onclick="logout()">Logout</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="message-container">
+            <!-- Messages go here -->
+        </div>
+
+        <div class="chat-input-area" id="chat-input-area">
+            <button id="record-btn" class="audio-btn">🎤</button>
+            <input type="text" id="chat-input" placeholder="Type a message...">
+            <button id="send-btn" class="send-btn">🚀</button>
+        </div>
+    </div>
+
+    <!-- Selection Bar -->
+    <div class="selection-bar" id="selection-bar">
+        <span id="selected-count">0 messages selected</span>
+        <div class="selection-actions">
+            <button class="bar-btn" onclick="cancelSelection()">Cancel</button>
+            <button class="bar-btn" style="background: white; color: #ff4d4d;"
+                onclick="deleteSelected()">Delete</button>
+        </div>
+    </div>
+
+    <!-- Custom Modal -->
+    <div class="custom-modal" id="custom-modal">
+        <div class="modal-content">
+            <h3 id="modal-title">Delete Message?</h3>
+            <p id="modal-text" style="margin-top: 1rem; opacity: 0.7;"></p>
+            <div class="modal-btns">
+                <button class="modal-btn cancel" onclick="closeModal()">Cancel</button>
+                <button class="modal-btn confirm" id="modal-confirm-btn">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/chat.js"></script>
+</body>
+
+</html>
