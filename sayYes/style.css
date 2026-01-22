@@ -1,0 +1,116 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
+
+body {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #d9a6a6;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  align-items: center;
+  gap: 20px;
+  max-width: 500px;
+  margin: 20px;
+}
+
+.container .tenor-gif-embed {
+  max-width: 200px;
+}
+
+.container .btn {
+  display: flex;
+  gap: 25px;
+}
+
+.btn a {
+  text-decoration: none;
+  color: #111;
+  background: #fff;
+  padding: 10px 25px;
+  border-radius: 66px;
+  box-shadow: 0.5rem 1rem 3rem hsl(0, 0%, 0%, 0.3);
+}
+
+.btn-home {
+  text-decoration: none;
+  background: white;
+  color: #ff6b6b;
+  padding: 12px 30px;
+  border-radius: 50px;
+  font-weight: bold;
+  font-size: 1.1rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  display: inline-block;
+  margin-top: 10px;
+  border: 2px solid white;
+}
+
+.btn-home:hover {
+  background: transparent;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.btn-mini-chat {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 50px;
+  height: 50px;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+  text-decoration: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  z-index: 1000;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.btn-mini-chat:hover {
+  background: #ff6b6b;
+  transform: scale(1.1) translateY(-5px);
+  box-shadow: 0 12px 40px rgba(255, 107, 107, 0.3);
+}
+
+.chat-icon {
+  font-size: 1.5rem;
+}
+
+.whisper-tooltip {
+  position: absolute;
+  right: 65px;
+  background: white;
+  color: #333;
+  padding: 5px 12px;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateX(10px);
+  transition: all 0.3s ease;
+  pointer-events: none;
+  font-weight: 600;
+}
+
+.btn-mini-chat:hover .whisper-tooltip {
+  opacity: 1;
+  transform: translateX(0);
+}
