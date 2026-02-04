@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}}</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .status-badge {
+            padding: 5px 10px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .status-success {
+            background: rgba(0, 255, 0, 0.1);
+            color: #00cc00;
+            border: 1px solid rgba(0, 255, 0, 0.2);
+        }
+
+        .status-failed {
+            background: rgba(255, 0, 0, 0.1);
+            color: #ff3333;
+            border: 1px solid rgba(255, 0, 0, 0.2);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        th {
+            font-weight: 600;
+            color: #666;
+        }
+
+        .log-row:hover {
+            background: rgba(0, 0, 0, 0.02);
+        }
+    </style>
+</head>
+
+<body>
+    <div style="padding: 2rem; max-width: 800px; margin: 0 auto;">
+        <div class="glass-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <h1>Website Pinger Logs</h1>
+                <a href="/admin" class="btn-primary" style="text-decoration: none; font-size: 0.9rem;">Back to
+                    Dashboard</a>
+            </div>
+
+            <p style="margin-bottom: 1.5rem; color: #666;">Target: <a href="https://zoho-notes.onrender.com/"
+                    target="_blank" style="color: var(--primary-dark);">https://zoho-notes.onrender.com/</a></p>
+
+            <div style="overflow-x: auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Status</th>
+                            <th>Response Time</th>
+                            <th>Message</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each logs}}
+                        <tr class="log-row">
+                            <td>{{this.timestamp}}</td>
+                            <td>
+                                <span
+                                    class="status-badge {{#if (eq this.status 'Success')}}status-success{{else}}status-failed{{/if}}">
+                                    {{this.status}}
+                                </span>
+                            </td>
+                            <td>{{this.responseTime}}ms</td>
+                            <td>{{this.message}}</td>
+                        </tr>
+                        {{else}}
+                        <tr>
+                            <td colspan="4" style="text-align: center; padding: 2rem; color: #999;">No logs found yet.
+                                Service runs every 5 mins.</td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

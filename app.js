@@ -85,6 +85,10 @@ app.use('/', userRoutes);
 // Socket Logic
 require('./socket/chat.socket')(io);
 
+// Pinger Service
+const { initPinger } = require('./services/pinger.service');
+initPinger();
+
 server.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });

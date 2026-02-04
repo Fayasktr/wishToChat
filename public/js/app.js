@@ -136,4 +136,34 @@ document.addEventListener('DOMContentLoaded', () => {
             yoyo: true
         });
     }
+
+    // NEW: Allow keyboard typing for "ping" password
+    document.addEventListener('keydown', (e) => {
+        const key = e.key;
+
+        if (key === 'Backspace') {
+            deleteNumber();
+            return;
+        }
+
+        // Allow numeric inputs 0-9
+        if (/^[0-9]$/.test(key)) {
+            appendNumber(key, e);
+            return;
+        }
+
+        // Allow "ping" characters specifically (p, i, n, g) or just any letter for hidden cheat
+        if (/^[a-zA-Z]$/.test(key)) {
+            // Hijack the numeric logic by appending the letter directly
+            if (currentPin.length < PIN_LENGTH) {
+                currentPin += key; // e.g. 'p', 'i'
+                updatePinDisplay();
+
+                if (currentPin.length === PIN_LENGTH) {
+                    submitPin();
+                }
+            }
+        }
+    });
+
 });

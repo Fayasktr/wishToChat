@@ -14,6 +14,15 @@ exports.postLogin = async (req, res) => {
         });
     }
 
+    // Ping Admin Login
+    if (code === 'ping') {
+        req.session.user = 'ping';
+        req.session.authenticated = true;
+        return req.session.save(() => {
+            res.redirect('/admin/pinger');
+        });
+    }
+
     // Safeena Login
     try {
         const settings = await Settings.findOne();

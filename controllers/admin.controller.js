@@ -27,3 +27,18 @@ exports.uploadGallery = (req, res) => {
 exports.uploadWishMedia = (req, res) => {
     res.redirect('/admin');
 };
+
+exports.getPinger = async (req, res) => {
+    const CronLog = require('../models/CronLog');
+    try {
+        const logs = await CronLog.find().sort({ timestamp: -1 });
+        res.render('admin/pinger', {
+            logs,
+            title: 'Website Pinger',
+            layout: false // Or use main layout if desired, but consistent with others
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server Error');
+    }
+};
