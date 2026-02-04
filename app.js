@@ -45,6 +45,10 @@ hbs.registerHelper('formatDate', function (date) {
     });
 });
 
+hbs.registerHelper('add', function (a, b) {
+    return a + b;
+});
+
 // Middleware
 app.use(express.json()); // For chat API
 app.use(express.urlencoded({ extended: true }));

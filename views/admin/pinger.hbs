@@ -66,6 +66,7 @@
                 <table>
                     <thead>
                         <tr>
+                            <th style="width: 50px;">#</th>
                             <th>Time</th>
                             <th>Status</th>
                             <th>Response Time</th>
@@ -75,6 +76,7 @@
                     <tbody>
                         {{#each logs}}
                         <tr class="log-row">
+                            <td style="color: #999; font-weight: 500;">{{add @index 1}}</td>
                             <td>{{formatDate this.timestamp}}</td>
                             <td>
                                 <span
