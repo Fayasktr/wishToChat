@@ -7,7 +7,13 @@ const TARGET_URL = 'https://zoho-notes.onrender.com/';
 const pingWebsite = async () => {
     const start = Date.now();
     try {
-        await axios.get(TARGET_URL);
+        // We accept status < 500 as "Success" because it means the server is UP and replied.
+        // Even a 401 (Unauthorized) or 404 (Not Found) proves the server is awake.
+        await axios.get(TARGET_URL, {
+            validateStatus: function (status) {
+                return status < 500;
+            }
+        });
         const duration = Date.now() - start;
 
         await CronLog.create({
