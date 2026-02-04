@@ -35,6 +35,7 @@ hbs.registerHelper('eq', function (a, b) {
 hbs.registerHelper('formatDate', function (date) {
     if (!date) return '';
     return new Date(date).toLocaleString('en-US', {
+        timeZone: 'Asia/Kolkata',
         year: 'numeric',
         month: 'short',
         day: 'numeric',
