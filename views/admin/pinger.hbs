@@ -75,7 +75,7 @@
                     <tbody>
                         {{#each logs}}
                         <tr class="log-row">
-                            <td>{{this.timestamp}}</td>
+                            <td>{{formatDate this.timestamp}}</td>
                             <td>
                                 <span
                                     class="status-badge {{#if (eq this.status 'Success')}}status-success{{else}}status-failed{{/if}}">

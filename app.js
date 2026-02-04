@@ -32,6 +32,18 @@ hbs.registerHelper('eq', function (a, b) {
     return a === b;
 });
 
+hbs.registerHelper('formatDate', function (date) {
+    if (!date) return '';
+    return new Date(date).toLocaleString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: true
+    });
+});
+
 // Middleware
 app.use(express.json()); // For chat API
 app.use(express.urlencoded({ extended: true }));
