@@ -12,6 +12,7 @@ const socketIO = require('socket.io');
 const adminRoutes = require('./routes/admin.routes');
 const userRoutes = require('./routes/user.routes');
 const chatRoutes = require('./routes/chat.routes');
+const cronRoutes = require('./routes/cron.routes');
 const seedChatUsers = require('./seedChatUsers');
 
 const app = express();
@@ -97,6 +98,7 @@ async function initDB() {
 // Routes
 app.use('/admin', adminRoutes);
 app.use('/chat-api', chatRoutes);
+app.use('/api/cron', cronRoutes);
 app.use('/', userRoutes);
 
 // Socket Logic
@@ -106,6 +108,10 @@ require('./socket/chat.socket')(io);
 const { initPinger } = require('./services/pinger.service');
 initPinger();
 
-server.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
-});
+if (!process.env.VERCEL) {
+    server.listen(PORT, () => {
+        console.log(`Server is running on http://localhost:${PORT}`);
+    });
+}
+
+module.exports = app;

@@ -39,6 +39,11 @@ const pingWebsite = async () => {
 };
 
 const initPinger = () => {
+    // Only run internal cron if not on Vercel
+    if (process.env.VERCEL) {
+        console.log('[PINGER] Running on Vercel, internal cron disabled.');
+        return;
+    }
     // Run every 5 minutes
     cron.schedule('*/5 * * * *', () => {
         pingWebsite();
@@ -46,4 +51,4 @@ const initPinger = () => {
 
 };
 
-module.exports = { initPinger };
+module.exports = { initPinger, pingWebsite };
