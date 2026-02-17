@@ -33,6 +33,7 @@ const adminAuth = (req, res, next) => {
 
 router.get('/', adminAuth, adminController.getDashboard);
 router.get('/pinger', adminAuth, adminController.getPinger);
+router.post('/pinger/toggle', adminAuth, adminController.togglePinger);
 router.post('/update', adminAuth, adminController.updateSettings);
 router.post('/upload/app-gallery', adminAuth, upload.array('galleryImages'), adminController.uploadGallery);
 router.post('/upload/wish-media', adminAuth, upload.fields([{ name: 'wishAudio', maxCount: 1 }, { name: 'wishImages', maxCount: 10 }]), adminController.uploadWishMedia);

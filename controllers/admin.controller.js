@@ -30,15 +30,30 @@ exports.uploadWishMedia = (req, res) => {
 
 exports.getPinger = async (req, res) => {
     const CronLog = require('../models/CronLog');
+    const Settings = require('../models/Settings');
     try {
-        const logs = await CronLog.find().sort({ timestamp: -1 });
+        const logs = await CronLog.find().sort({ timestamp: -1 }).limit(50);
+        const appSettings = await Settings.findOne();
         res.render('admin/pinger', {
             logs,
+            appSettings,
             title: 'Website Pinger',
-            layout: false // Or use main layout if desired, but consistent with others
+            layout: false
         });
     } catch (err) {
         console.error(err);
         res.status(500).send('Server Error');
+    }
+};
+
+exports.togglePinger = async (req, res) => {
+    try {
+        const settings = await Settings.findOne();
+        const newState = !settings.pingerEnabled;
+        await Settings.findOneAndUpdate({}, { pingerEnabled: newState }, { upsert: true });
+        res.json({ success: true, pingerEnabled: newState });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ success: false, error: 'Server Error' });
     }
 };

@@ -1,14 +1,19 @@
 const cron = require('node-cron');
 const axios = require('axios');
 const CronLog = require('../models/CronLog');
+const Settings = require('../models/Settings');
 
 const TARGET_URL = 'https://zoho-notes.onrender.com/';
 
 const pingWebsite = async () => {
-    const start = Date.now();
     try {
-        // We accept status < 500 as "Success" because it means the server is UP and replied.
-        // Even a 401 (Unauthorized) or 404 (Not Found) proves the server is awake.
+        const settings = await Settings.findOne();
+        if (settings && settings.pingerEnabled === false) {
+            // console.log('[PINGER] Service is currently disabled');
+            return;
+        }
+
+        const start = Date.now();
         await axios.get(TARGET_URL, {
             validateStatus: function (status) {
                 return status < 500;
@@ -36,11 +41,9 @@ const pingWebsite = async () => {
 const initPinger = () => {
     // Run every 5 minutes
     cron.schedule('*/5 * * * *', () => {
-        console.log('[PINGER] Starting scheduled ping...');
         pingWebsite();
     });
 
-    console.log('[PINGER] Service initialized (Interval: 5 mins)');
 };
 
 module.exports = { initPinger };

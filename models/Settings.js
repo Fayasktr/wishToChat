@@ -12,6 +12,10 @@ const settingsSchema = new mongoose.Schema({
     themeColor: {
         type: String,
         default: '#ffb6c1'
+    },
+    pingerEnabled: {
+        type: Boolean,
+        default: true
     }
 });
 

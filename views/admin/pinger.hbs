@@ -47,6 +47,47 @@
         .log-row:hover {
             background: rgba(0, 0, 0, 0.02);
         }
+
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.03);
+            border-radius: 12px;
+        }
+
+        .service-status {
+            font-weight: 600;
+        }
+
+        .status-active {
+            color: #00cc00;
+        }
+
+        .status-paused {
+            color: #ff3333;
+        }
+
+        .btn-toggle {
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .btn-pause {
+            background: #ff4d4d;
+            color: white;
+        }
+
+        .btn-resume {
+            background: #00dd88;
+            color: white;
+        }
     </style>
 </head>
 
@@ -61,6 +102,19 @@
 
             <p style="margin-bottom: 1.5rem; color: #666;">Target: <a href="https://zoho-notes.onrender.com/"
                     target="_blank" style="color: var(--primary-dark);">https://zoho-notes.onrender.com/</a></p>
+
+            <div class="toggle-container">
+                <span class="service-status">Service Status:
+                    <span id="status-text"
+                        class="{{#if appSettings.pingerEnabled}}status-active{{else}}status-paused{{/if}}">
+                        {{#if appSettings.pingerEnabled}}Running{{else}}Paused{{/if}}
+                    </span>
+                </span>
+                <button id="toggle-btn"
+                    class="btn-toggle {{#if appSettings.pingerEnabled}}btn-pause{{else}}btn-resume{{/if}}">
+                    {{#if appSettings.pingerEnabled}}Pause Pinger{{else}}Resume Pinger{{/if}}
+                </button>
+            </div>
 
             <div style="overflow-x: auto;">
                 <table>
@@ -98,6 +152,39 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.getElementById('toggle-btn').addEventListener('click', async function () {
+            const btn = this;
+            btn.disabled = true;
+            try {
+                const response = await fetch('/admin/pinger/toggle', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                const data = await response.json();
+                if (data.success) {
+                    const statusText = document.getElementById('status-text');
+                    if (data.pingerEnabled) {
+                        statusText.innerText = 'Running';
+                        statusText.className = 'status-active';
+                        btn.innerText = 'Pause Pinger';
+                        btn.className = 'btn-toggle btn-pause';
+                    } else {
+                        statusText.innerText = 'Paused';
+                        statusText.className = 'status-paused';
+                        btn.innerText = 'Resume Pinger';
+                        btn.className = 'btn-toggle btn-resume';
+                    }
+                }
+            } catch (err) {
+                console.error('Error toggling pinger:', err);
+                alert('Failed to toggle pinger status');
+            } finally {
+                btn.disabled = false;
+            }
+        });
+    </script>
 </body>
 
 </html>
