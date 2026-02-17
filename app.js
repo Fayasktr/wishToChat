@@ -1,5 +1,5 @@
 const express = require('express');
-// Deployment Trigger: Vercel Migration
+// Deployment Trigger: Vercel Refresh %date%
 require('dotenv').config();
 const hbs = require('hbs');
 const session = require('express-session');
