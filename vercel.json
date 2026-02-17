@@ -1,19 +1,8 @@
 {
-    "version": 2,
-    "builds": [
+    "rewrites": [
         {
-            "src": "app.js",
-            "use": "@vercel/node"
-        }
-    ],
-    "routes": [
-        {
-            "src": "/api/cron/(.*)",
-            "dest": "/app.js"
-        },
-        {
-            "src": "/(.*)",
-            "dest": "/app.js"
+            "source": "/(.*)",
+            "destination": "/app.js"
         }
     ],
     "crons": [
