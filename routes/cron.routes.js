@@ -4,8 +4,12 @@ const { pingWebsite } = require('../services/pinger.service');
 
 router.get('/pinger', async (req, res) => {
     // Basic security check for Vercel Cron
-    // In production, Vercel sends a CRON_SECRET or specific header
-    // But for a simple ping, we can just allow it or check a secret
+    const authHeader = req.headers['authorization'];
+    if (process.env.CRON_SECRET && authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+        console.warn('[CRON] Unauthorized attempt to trigger pinger');
+        return res.status(401).json({ success: false, message: 'Unauthorized' });
+    }
+
     console.log('[CRON] Pinger triggered');
     try {
         await pingWebsite();
